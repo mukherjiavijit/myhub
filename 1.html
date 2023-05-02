@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>DELL</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<style>
+		tr:nth-of-type(5) td {
+               padding: 1px;
+              }
+		table {
+			margin: 30px auto;
+			border-collapse: collapse;
+			width: 700px;
+			background-color: lightsteelblue;
+			border: 1px solid greenyellow
+		}
+		th {
+			font-weight: bold;
+			text-align: center;
+			padding: 10px;
+			background-color:royalblue;
+			border: 3px solid rgb(40, 235, 40);
+		}
+		td {
+			padding: 35px;
+			text-align: center;
+			border: 3px solid rgb(40, 235, 40);
+		}
+		img {
+			max-width: 100px;
+			height: auto;
+		}
+		#powered-by {
+			color: black;
+			font-style: italic;
+		}
+		#yahoo {
+			color: rgb(255, 0, 217);
+			font-weight: bold;
+		}
+		#symbol {
+			color: rgb(255, 0, 217);;
+			font-weight: bold;
+			font-style: italic;
+		}
+		#Finance {
+			color: rgb(255, 0, 217);;
+			font-weight: bold;
+
+		}
+		tr:nth-of-type(5) {
+        background-color: whitesmoke;
+		height: 1px;
+}
+		table tr:last-of-type {
+			background-image: url(images/esg.png);
+            
+        }
+		table tr:nth-child(5) {
+  padding: 5px;
+}
+
+	</style>
+</head>
+<body>
+	
+	<div id="esgTableDiv"></div>
+
+	<script>
+		$(document).ready(function(){
+			var queryString = window.document.location.search;
+			var urlParams = new URLSearchParams(queryString);
+			var objectId = urlParams.get("object_id");
+			if (objectId === "1")
+			{
+                           objectId = "DELL";
+                          }
+			else {
+                         objectId = "TSLA";
+                         }
+		const settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://yh-finance.p.rapidapi.com/stock/get-esg-scores?symbol=" + objectId + "&region=US&lang=en-US",
+				"method": "GET",
+				"headers": {
+					"X-RapidAPI-Key": "c09ad94fd1msh5e6c71345041e5bp1ff22fjsn5fbc535a1330",
+					"X-RapidAPI-Host": "yh-finance.p.rapidapi.com"
+			}
+		};
+			$.ajax(settings).done(function (response) {
+			const esgScores = response.quoteSummary.result[0].esgScores;
+
+			// Calculate ESG rating based on total ESG score
+			const totalEsgScore = parseFloat(esgScores.totalEsg.raw);
+			let esgRating = "";
+			if (totalEsgScore >= 60) {
+				esgRating = "high";
+			} else if (totalEsgScore >=20) {
+				esgRating = "avg";
+			} else {
+				esgRating = "low";
+			}
+
+			// Set ESG rating image source
+		    const esgRatingImage = `
+			<td rowspan="4" class="esg-rating-image">
+				<img src="images/${esgRating}.png" alt="${esgRating} ESG Rating">
+			</td>
+		`;
+	
+
+
+			// create the table rows
+			const esgTableRows = `
+    
+		<tr>
+        <td>Environmental Score</td>
+        <td>${esgScores.environmentScore.raw}</td>
+        ${esgRatingImage}
+    </tr>
+			<tr>
+        <td>Social Score</td>
+        <td>${esgScores.socialScore.raw}</td>
+    </tr>
+    <tr>
+        <td>Governance Score</td>
+        <td>${esgScores.governanceScore.raw}</td>
+    </tr>
+	<tr>
+					<td>Total ESG Score</td>
+					<td>${esgScores.totalEsg.raw}</td>
+				</tr>
+    
+    <tr>
+        <td colspan="3" style="text-align: center;"><marquee behavior="scroll" direction="left"><span id="powered-by">Powered by </span><span id="yahoo">Yahoo</span><span id="symbol">! </span><span id="Finance">Finance</span> </td>
+    </tr>
+	<tr>
+        <td colspan="3" style="text-align: center;"> </td>
+    </tr>
+`;
+			
+			const tableRows = `
+			
+			${esgTableRows}
+		`;
+
+		// create the table html
+		const tableHtml = `
+				<table>
+					<thead>
+						<tr>
+							<th>ESG Category</th>
+							<th>Score</th>
+							<th>ESG Rating</th>
+						</tr>
+					</thead>
+					<tbody>
+						${tableRows}
+					</tbody>
+				</table>
+			`;
+
+            // set the table html
+		$("#esgTableDiv").html(tableHtml);
+	});
+	});
+</script>
+
+</marquee>
+</body>
+</html>

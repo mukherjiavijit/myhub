@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Coupa App Marketplace Search</title>
+	<link rel="stylesheet" type="text/css" href="POC.css">
+</head>
+<body>
+<div class="search-container">
+     <form id="search-form" onsubmit="return submitSearchForm()">
+      <input type="text" id="search-input" placeholder="Coupa App Marketplace..." name="q">
+      <button type="submit" id="search-button"><img src="images/search.png"></button>
+    </form>
+  </div> 
+  
+<script>
+  function submitSearchForm() {
+    var query = document.getElementById("search-input").value;
+    window.location.href = "https://marketplace.coupa.com/en-US/listing?q=" + query;
+    return false;
+  }
+</script>
+</body>
+</html>

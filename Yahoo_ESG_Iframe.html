@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ESG Scores</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		iframe {
+			width: 50%;
+			height: 400px;
+			border: 2px solid yellowgreen;
+			background-color: green;
+			color: yellow;
+		}
+	</style>
+</head>
+<body>
+	<h1>Supplier ESG Report</h1>
+	<canvas id="myChart"></canvas>
+	<script>
+		const settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-esg-scores?symbol=TSLA&region=US&lang=en-US",
+			"method": "GET",
+			"headers": {
+				"X-RapidAPI-Key": "c09ad94fd1msh5e6c71345041e5bp1ff22fjsn5fbc535a1330",
+				"X-RapidAPI-Host": "apidojo-yahoo-finance-v1.p.rapidapi.com"
+			}
+		};
+
+		$.ajax(settings).done(function (response) {
+			const esgScores = response.quoteSummary.result[0].esgScores;
+
+			// create the chart data
+			const chartData = {
+				labels: ["Total ESG Score", "Environmental Score", "Social Score", "Governance Score"],
+				datasets: [{
+					label: "Powered by RapidAPI",
+					data: [esgScores.totalEsg.raw, esgScores.environmentScore.raw, esgScores.socialScore.raw, esgScores.governanceScore.raw],
+					backgroundColor: ["green", "orange", "yellow", "blue"]
+				}]
+			};
+
+			// create the chart options
+			const chartOptions = {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			};
+
+			// create the chart
+			const ctx = document.getElementById("myChart").getContext("2d");
+			const myChart = new Chart(ctx, {
+				type: "bar",
+				data: chartData,
+				options: chartOptions
+			});
+
+			// create the iframe
+			const iframe = document.createElement("iframe");
+			iframe.setAttribute("srcdoc", "<h2>Environmental, Social and Governance (ESG) Scores for TSLA</h2>");
+			iframe.style.display = "none";
+			document.body.appendChild(iframe);
+			const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+			iframeDoc.body.innerHTML = "<canvas id='myChart'></canvas>";
+		});
+	</script>
+</body>
+</html>

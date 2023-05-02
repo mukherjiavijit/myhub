@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<style>
+		table {
+			margin: 30px auto;
+			border-collapse: collapse;
+			width: 700px;
+			background-color: lightsteelblue;
+			border: 1px solid rgb(151, 15, 164);
+		}
+		th {
+			font-weight: bold;
+			text-align: center;
+			padding: 10px;
+			background-color: lightgray;
+			border: 1px solid black;
+		}
+		td {
+			padding: 10px;
+			text-align: center;
+			border: 1px solid black;
+		}
+		img {
+			max-width: 80px;
+			height: auto;
+		}
+		#powered-by {
+			color: black;
+			font-style: italic;
+		}
+		#yahoo {
+			color: rgb(255, 0, 217);
+			font-weight: bold;
+		}
+		#symbol {
+			color: rgb(255, 0, 217);;
+			font-weight: bold;
+			font-style: italic;
+		}
+		#Finance {
+			color: rgb(255, 0, 217);;
+			font-weight: bold;
+
+		}
+
+	</style>
+</head>
+<body>
+	<marquee behavior="scroll" direction="left"><span id="powered-by">Powered by </span><span id="yahoo">Yahoo</span><span id="symbol">! </span><span id="Finance">Finance</span>
+	</marquee>
+	<div id="esgTableDiv"></div>
+
+	<script>
+		$(document).ready(function(){
+			debugger;
+			var queryString = window.document.location.search;
+			var urlParams = new URLSearchParams(queryString);
+			var objectId = urlParams.get("object_id");
+		const settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-esg-scores?symbol=" + suppliername + "&region=US&lang=en-US",
+			"method": "GET",
+			"headers": {
+				"X-RapidAPI-Key": "c09ad94fd1msh5e6c71345041e5bp1ff22fjsn5fbc535a1330",
+				"X-RapidAPI-Host": "apidojo-yahoo-finance-v1.p.rapidapi.com"
+			}
+		};
+			$.ajax(settings).done(function (response) {
+			const esgScores = response.quoteSummary.result[0].esgScores;
+
+			// Calculate ESG rating based on total ESG score
+			const totalEsgScore = parseFloat(esgScores.totalEsg.raw);
+			let esgRating = "";
+			if (totalEsgScore >= 60) {
+				esgRating = "high";
+			} else if (totalEsgScore >=20) {
+				esgRating = "avg";
+			} else {
+				esgRating = "low";
+			}
+
+			// Set ESG rating image source
+		    const esgRatingImage = `
+			<td rowspan="4" class="esg-rating-image">
+				<img src="images/${esgRating}.png" alt="${esgRating} ESG Rating">
+			</td>
+		`;
+
+			// create the table rows
+			const esgTableRows = `
+				
+				<tr>
+					<td>Social Score</td>
+					<td>${esgScores.socialScore.raw}</td>
+				</tr>
+				<tr>
+					<td>Governance Score</td>
+					<td>${esgScores.governanceScore.raw}</td>
+				</tr>
+                
+                <tr>
+					<td>Total ESG Score</td>
+					<td>${esgScores.totalEsg.raw}</td>
+				</tr>
+				
+			`;
+			
+			const tableRows = `
+			<tr>
+                     <td>Environmental Score</td>
+					<td>${esgScores.environmentScore.raw}</td>
+				${esgRatingImage}
+			</tr>
+			${esgTableRows}
+		`;
+
+		// create the table html
+		const tableHtml = `
+				<table>
+					<thead>
+						<tr>
+							<th>ESG Category</th>
+							<th>Score</th>
+							<th>ESG Rating</th>
+						</tr>
+					</thead>
+					<tbody>
+						${tableRows}
+					</tbody>
+				</table>
+			`;
+
+            // set the table html
+		$("#esgTableDiv").html(tableHtml);
+	});
+});
+</script>
+
+</body>
+</html>
