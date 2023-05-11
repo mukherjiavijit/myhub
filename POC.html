@@ -16,6 +16,8 @@
    function submitSearchForm() 
 	{
     var query = window.parent.document.title;
+    console.log(query);
+    debugger;
     window.location.href = "https://marketplace.coupa.com/en-US/listing?q=" + query;
     return false;
   }
