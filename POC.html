@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Coupa App Marketplace Search</title>
 	<link rel="stylesheet" type="text/css" href="POC.css">
 </head>
 <body>
@@ -14,8 +13,8 @@
   </div> 
   
 <script>
-  function submitSearchForm() {
-    var query = document.getElementById("search-input").value;
+   function submitSearchForm() {
+    var query = document.title;
     window.location.href = "https://marketplace.coupa.com/en-US/listing?q=" + query;
     return false;
   }
