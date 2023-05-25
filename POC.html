@@ -2,22 +2,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="POC.css">
+	<title>Coupa App Marketplace Search</title>
+	<style>
+    .search-container {
+    width: 10%;
+    min-height: 25vh;
+    padding: 5%;
+    background-image: linear-gradient(rgba(0,8,51,0.9),rgba(0,8,51,0.9)),url(images/background.png);
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  #search-form {
+    width: 170%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    border-radius: 60px;
+    padding: 10px 20px;
+    backdrop-filter: blur(4px) saturate(180%);
+  }
+  
+  #search-input {
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    padding: 24px 20px;
+    font-size: 20px;
+    color: #cac7ff;
+    
+  }
+
+  ::placeholder{
+    color: #cac7ff;
+  }
+  
+  #search-button img {
+
+    width: 35px;
+   
+  }
+  #search-button {
+    border: 2;
+    border-radius: 40%;
+    width: 60px;
+    height: 60px;
+    background: #58629b;
+    cursor: pointer;
+
+  }
+    </style>
 </head>
 <body>
 <div class="search-container">
      <form id="search-form" onsubmit="return submitSearchForm()">
-      <input type="text" id="search-input" placeholder="App Marketplace." name="q">
+      <input type="text" id="search-input" placeholder="App Marketplace..." name="q">
       <button type="submit" id="search-button"><img src="images/search.png"></button>
     </form>
   </div> 
   
 <script>
-   function submitSearchForm() 
-	{
-    var query = window.parent.document.title;
-    console.log(query);
-    debugger;
+  function submitSearchForm() {
+    var query = document.getElementById("search-input").value;
     window.location.href = "https://marketplace.coupa.com/en-US/listing?q=" + query;
     return false;
   }
